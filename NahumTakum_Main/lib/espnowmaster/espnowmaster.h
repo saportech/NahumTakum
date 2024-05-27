@@ -26,7 +26,7 @@ class ESPNowMaster {
     esp_now_peer_info_t peerInfos[NUM_SLAVES]; // Define peerInfos array with a fixed size
     static SensorData sensorData[NUM_SLAVES]; // Private member to hold received data
     static void printMacAddress(const uint8_t *mac);
-
+    
 };
 
 #endif // ESPNowMaster_h

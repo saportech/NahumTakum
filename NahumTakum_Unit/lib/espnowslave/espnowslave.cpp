@@ -1,5 +1,5 @@
 #include "ESPNowSlave.h"
-//CC:7B:5C:AC:7F:64
+
 uint8_t masterMac[] = {0xCC, 0x7B, 0x5C, 0xAC, 0x7F, 0x64};//Final Master PCB
 
 void ESPNowSlave::OnDataRecv(const uint8_t *mac, const uint8_t *incomingData, int len) {

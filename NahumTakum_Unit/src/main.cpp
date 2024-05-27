@@ -2,7 +2,7 @@
 #include "mympu.h"
 #include "espnowslave.h"
 
-#define MPU_SAMPLE_INTERVAL 20 // Sampling interval for MPU in milliseconds
+#define SAMPLE_INTERVAL 20
 
 MyMPU mympu;
 ESPNowSlave espnowslave;
@@ -24,20 +24,24 @@ void loop() {
 
   unsigned long currentMillis = millis();
 
-  if (currentMillis - lastMPUSampleTime >= MPU_SAMPLE_INTERVAL) {
+  if (currentMillis - lastMPUSampleTime >= SAMPLE_INTERVAL) {
 
     lastMPUSampleTime = currentMillis;
 
-    int yaw = mympu.getYaw();
+    //int yaw = mympu.getYaw();
+    int yaw90 = mympu.getYaw2();
+    //int yaw120 = mympu.getYaw120();
 
-    int raw_pitch = mympu.getSuperpositionValue();
+    int angleToGround = mympu.getZAngleToGround();
 
     mympu.update();
 
-    //Serial.print("Yaw: "); Serial.print(yaw);
-    //Serial.print(" Pitch: "); Serial.println(raw_pitch);
+    // Serial.print(" Yaw: "); Serial.print(yaw);
+    // Serial.print(" Yaw90: "); Serial.print(yaw90);
+    // Serial.print(" Yaw120: "); Serial.print(yaw120);
+    // Serial.print("Angle to ground: "); Serial.println(angleToGround);
 
-    espnowslave.sendData(raw_pitch, yaw);
+    espnowslave.sendData(angleToGround, yaw90);
 
   }
 

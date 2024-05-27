@@ -3,7 +3,7 @@
 #include "mymidi.h"
 #include <FastLED.h>
 
-#define MAP_VALUES
+//#define MAP_VALUES
 
 #define LED_PIN 26
 #define NUM_LEDS 5
@@ -16,9 +16,11 @@ ESPNowMaster espNowMaster;
 MyMIDI myMIDI;
 
 bool setupButtonPressed = false;
-bool playButtonPressed = false;
+bool playButtonPressed = true;
 
-bool mappingPressed = false;
+bool mappingPressed = true;
+
+bool someButtonPressed = false;
 
 void getButtonInputs();
 void sendDataToComputer();
@@ -43,10 +45,10 @@ void loop() {
 
   getButtonInputs();
 
-  if (setupButtonPressed) {
+  if (someButtonPressed) {
     myMIDI.getPotentiometerInputs();
   }
-  else if (playButtonPressed) {
+  else {
     sendDataToComputer();
   }
 
@@ -55,13 +57,19 @@ void loop() {
 void sendDataToComputer() {
   int mapped_raw_pitch;
   int mapped_yaw;
-  
+  int specialAngleValue = 100;
+
   for (int i = 1; i <= NUM_SLAVES; i++) {
     SensorData data = espNowMaster.getSensorData(i);
-
+    
     if (mappingPressed) {
-      mapped_raw_pitch = map(data.raw_pitch, 1, 126, 20, 40);
-      mapped_yaw = map(data.yaw, 1, 126, 20, 40);
+      if (data.raw_pitch >= 1 && data.raw_pitch <= specialAngleValue)
+          mapped_raw_pitch = map(data.raw_pitch, 1, specialAngleValue, 1, 126);
+      else
+          mapped_raw_pitch = 126;
+    
+    mapped_yaw = data.yaw;
+    
     }
     else {
       mapped_raw_pitch = data.raw_pitch;
@@ -100,18 +108,18 @@ void setupLeds() {
 
 void getButtonInputs() {
   #ifndef MAP_VALUES
-  if (digitalRead(SETUP_MAPPING_BUTTON_PIN) == LOW) {
-    //Serial.println("Setup button pressed");
-    setupButtonPressed = true;
-    playButtonPressed = false;
-    turnOnLed(0);
-    delay(500);
-  }
-  else if (digitalRead(PLAY_BUTTON_PIN) == LOW) {
-    //Serial.println("Play button pressed");
-    setupButtonPressed = false;
-    playButtonPressed = true;
-    turnOnLed(1);
+  if (digitalRead(SETUP_MAPPING_BUTTON_PIN) == LOW || digitalRead(PLAY_BUTTON_PIN) == LOW) {
+    if (someButtonPressed) {
+      someButtonPressed = false;
+      for (int i = 0; i < NUM_LEDS; i++) {
+        leds[i] = CRGB::Black;
+      }
+      FastLED.show();
+    }
+    else {
+      someButtonPressed = true;
+      turnOnLed(1);
+    }
     delay(500);
   }
   #else//MAPPING
@@ -134,7 +142,7 @@ void getButtonInputs() {
     setupButtonPressed = false;
     playButtonPressed = true;
     leds[1] = CRGB::Green;
-      FastLED.show();
+    FastLED.show();
     delay(500);
   }
   #endif

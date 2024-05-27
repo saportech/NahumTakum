@@ -13,7 +13,9 @@ public:
     int getPitch();
     int getRoll();
     int getSuperpositionValue();
-
+    int getZAngleToGround();
+    int getYaw2();
+    int getYaw120();
 private:
 
     float yaw;
