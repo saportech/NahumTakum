@@ -39,6 +39,27 @@ void MyMIDI::getPotentiometerInputs() {
     }
 }
 
+void MyMIDI::pairMidiToAbelton() {
+    for (int i = 1; i <= 10; i++) {
+        sendMIDI(176, i, 40);
+        delay(1000);
+        sendMIDI(176, i, 40);
+        delay(1000);
+        sendMIDI(176, i, 40);
+        delay(1000);
+        sendMIDI(176, i, 40);
+        delay(1000);
+        sendMIDI(176, i, 40);
+        delay(1000);
+        sendMIDI(176, i, 40);
+        delay(1000);
+        sendMIDI(176, i, 40);
+        delay(1000);
+        sendMIDI(176, i, 40);
+        delay(1000);
+    }
+}
+
 void MyMIDI::sendMIDI(unsigned char command, unsigned char note, unsigned char val) {
     Serial.write(command);
     Serial.write(note);

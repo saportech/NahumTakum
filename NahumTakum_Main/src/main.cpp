@@ -39,6 +39,8 @@ void setup() {
 
   setupLeds();
 
+  //myMIDI.pairMidiToAbelton();
+
 }
 
 void loop() {

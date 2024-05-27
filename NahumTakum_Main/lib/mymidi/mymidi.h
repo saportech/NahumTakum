@@ -9,6 +9,7 @@ class MyMIDI {
     MyMIDI();
     void sendMIDI(unsigned char command, unsigned char note, unsigned char val);
     void getPotentiometerInputs();
+    void pairMidiToAbelton();
 
   private:
     // Define control pins for the 16:1 MUX
